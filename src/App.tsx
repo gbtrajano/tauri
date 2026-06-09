@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Estoque from './pages/Estoque';
 import OrdensServico from './pages/OrdensServico';
@@ -9,8 +9,11 @@ import Veiculos from './pages/Veiculos';
 import Configuracoes from './pages/Configuracoes';
 import Servicos from './pages/Servicos';
 import Orcamento from './pages/Orcamento';
+import { Login } from './pages/Login';
 import { getDatabase } from './database';
 import { check, Update } from '@tauri-apps/plugin-updater';
+import { AuthProvider } from './context/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -29,7 +32,7 @@ function App() {
           const resposta = window.confirm(
             `🚀 Nova versão disponível: ${manifest.version}\n\n${manifest.body}\n\nDeseja atualizar agora?`
           );
-          
+
           if (resposta) {
             await manifest.downloadAndInstall();
             // O Tauri reinicia o app automaticamente após instalação
@@ -46,36 +49,44 @@ function App() {
   }, []); // Array vazio = roda apenas uma vez no mount
 
   return (
-    <BrowserRouter>
-      <div className="app-container">
-        <aside className="sidebar">
-          <h2>AmigoMecânico</h2>
-          <nav>
-            <NavLink to="/dashboard">📊 Dashboard</NavLink>
-            <NavLink to="/estoque">📦 Estoque</NavLink>
-            <NavLink to="/servicos">🔧 Serviços</NavLink>
-            <NavLink to="/orcamento">💰 Orçamento</NavLink>
-            <NavLink to="/ordens">📋 Ordens de Serviço</NavLink>
-            <NavLink to="/clientes">👥 Clientes</NavLink>
-            <NavLink to="/veiculos">🚗 Veículos</NavLink>
-            <NavLink to="/configuracoes">⚙️ Configurações</NavLink>
-          </nav>
-        </aside>
-        <main className="content">
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/estoque" element={<Estoque />} />
-            <Route path="/servicos" element={<Servicos />} />
-            <Route path="/orcamento" element={<Orcamento />} />
-            <Route path="/ordens" element={<OrdensServico />} />
-            <Route path="/clientes" element={<Clientes />} />
-            <Route path="/veiculos" element={<Veiculos />} />
-            <Route path="/configuracoes" element={<Configuracoes />} />
-            <Route path="*" element={<Dashboard />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="app-container">
+          <aside className="sidebar">
+            <h2>AmigoMecânico</h2>
+            <nav>
+              <NavLink to="/dashboard">📊 Dashboard</NavLink>
+              <NavLink to="/estoque">📦 Estoque</NavLink>
+              <NavLink to="/servicos">🔧 Serviços</NavLink>
+              <NavLink to="/orcamento">💰 Orçamento</NavLink>
+              <NavLink to="/ordens">📋 Ordens de Serviço</NavLink>
+              <NavLink to="/clientes">👥 Clientes</NavLink>
+              <NavLink to="/veiculos">🚗 Veículos</NavLink>
+              <NavLink to="/configuracoes">⚙️ Configurações</NavLink>
+            </nav>
+          </aside>
+          <main className="content">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <ProtectedRoute>
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/estoque" element={<Estoque />} />
+                  <Route path="/servicos" element={<Servicos />} />
+                  <Route path="/orcamento" element={<Orcamento />} />
+                  <Route path="/ordens" element={<OrdensServico />} />
+                  <Route path="/clientes" element={<Clientes />} />
+                  <Route path="/veiculos" element={<Veiculos />} />
+                  <Route path="/configuracoes" element={<Configuracoes />} />
+                  <Route path="*" element={<Dashboard />} />
+                </Routes>
+              </ProtectedRoute>
+            </Routes>
+          </main>
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
