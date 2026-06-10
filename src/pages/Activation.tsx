@@ -1,18 +1,7 @@
 // src/pages/Activation.tsx
 import { useState } from 'react'
+import { supabase } from '../lib/supabase'
 import '../App.css'
-
-// =====================================================
-// CHAVES DE ATIVAÇÃO VÁLIDAS
-// Adicione as chaves dos seus clientes aqui.
-// Formato: XXXX-XXXX-XXXX-XXXX (maiúsculas)
-// =====================================================
-const VALID_KEYS: string[] = [
-  'AMIGO-2024-MECA-PRO1',
-  'AMIGO-2024-MECA-PRO2',
-  'AMIGO-2024-MECA-PRO3',
-  'AMIGO-DEMO-TEST-0001',
-]
 
 interface ActivationProps {
   onActivated: () => void
@@ -37,18 +26,36 @@ export function Activation({ onActivated }: ActivationProps) {
     setError(null)
     setLoading(true)
 
-    // Simula uma verificação (800ms) para não parecer instantâneo
-    await new Promise(r => setTimeout(r, 800))
-
     const normalized = key.trim().toUpperCase()
 
-    if (VALID_KEYS.includes(normalized)) {
+    try {
+      // Busca a chave na tabela 'activation_keys' no Supabase
+      const { data, error: sbError } = await supabase
+        .from('activation_keys')
+        .select('*')
+        .eq('key', normalized)
+        .single()
+
+      if (sbError || !data) {
+        setError('Chave de ativação inválida. Verifique os caracteres e tente novamente.')
+        setLoading(false)
+        return
+      }
+
+      // Opcional: Se houver uma coluna "is_active" ou "status"
+      if (data.is_active === false) {
+        setError('Esta chave já foi utilizada ou está desativada.')
+        setLoading(false)
+        return
+      }
+
       setSuccess(true)
       localStorage.setItem('amigo_activated', 'true')
       await new Promise(r => setTimeout(r, 1000))
       onActivated()
-    } else {
-      setError('Chave de ativação inválida. Verifique os caracteres e tente novamente.')
+    } catch (err) {
+      console.error(err)
+      setError('Erro ao comunicar com o servidor de ativação. Tente novamente mais tarde.')
       setLoading(false)
     }
   }
