@@ -28,16 +28,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    // Busca sessão inicial — com fallback em caso de erro de rede
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setUser(session?.user ?? null)
+      })
+      .catch(() => {
+        setUser(null)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
 
-    // Listen for auth changes
+    // Escuta mudanças de auth (login, logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null)
+        setLoading(false)
       }
     )
 
@@ -47,10 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
   }
 
@@ -59,10 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null)
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
+  // ✅ Sem early return! Deixa o ProtectedRoute tratar o estado de loading
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
