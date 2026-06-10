@@ -1,5 +1,5 @@
 [package]
-name = "meu-app-tauri"
+name = "AmigoMecanico"
 version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]

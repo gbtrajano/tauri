@@ -7,36 +7,36 @@
 
 /* ===== CSS VARIABLES ===== */
 :root {
-  --bg-primary:    #070b14;
-  --bg-secondary:  #0d1424;
-  --bg-card:       #111827;
-  --sidebar-bg:    #080c1a;
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f8fafc;
+  --bg-card:       #ffffff;
+  --sidebar-bg:    #ffffff;
   --sidebar-width: 240px;
 
-  --accent:        #6366f1;
-  --accent-light:  #818cf8;
-  --accent-dark:   #4f46e5;
-  --accent-glow:   rgba(99, 102, 241, 0.3);
-  --cyan:          #22d3ee;
+  --accent:        #ef4444;
+  --accent-light:  #f87171;
+  --accent-dark:   #dc2626;
+  --accent-glow:   rgba(239, 68, 68, 0.15);
+  --cyan:          #ef4444;
   --green:         #10b981;
   --orange:        #f59e0b;
   --red:           #ef4444;
 
-  --text-primary:   #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted:     #475569;
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
 
-  --border:        rgba(255, 255, 255, 0.06);
-  --border-accent: rgba(99, 102, 241, 0.4);
+  --border:        rgba(0, 0, 0, 0.08);
+  --border-accent: rgba(239, 68, 68, 0.3);
 
   --radius:    12px;
   --radius-sm: 8px;
   --radius-lg: 20px;
 
-  --shadow-sm:     0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow:        0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg:     0 8px 40px rgba(0, 0, 0, 0.5);
-  --shadow-accent: 0 4px 24px rgba(99, 102, 241, 0.25);
+  --shadow-sm:     0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow:        0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg:     0 8px 40px rgba(0, 0, 0, 0.12);
+  --shadow-accent: 0 4px 24px rgba(239, 68, 68, 0.15);
 
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -111,7 +111,7 @@ body {
 .sidebar-logo-icon {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -176,13 +176,13 @@ body {
 }
 
 .sidebar a:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.04);
   color: var(--text-secondary);
 }
 
 .sidebar a.active {
-  background: rgba(99, 102, 241, 0.12);
-  color: var(--accent-light);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -261,7 +261,7 @@ body {
 .loading-spinner {
   width: 44px;
   height: 44px;
-  border: 3px solid rgba(99, 102, 241, 0.15);
+  border: 3px solid rgba(239, 68, 68, 0.15);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
@@ -295,7 +295,7 @@ body {
   position: absolute;
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 65%);
   top: -250px;
   right: -250px;
   pointer-events: none;
@@ -306,7 +306,7 @@ body {
   position: absolute;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.07) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.05) 0%, transparent 65%);
   bottom: -150px;
   left: -150px;
   pointer-events: none;
@@ -335,7 +335,7 @@ body {
   left: 20%;
   right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
   border-radius: 1px;
 }
 
@@ -353,7 +353,7 @@ body {
 .auth-logo-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   border-radius: 18px;
   display: flex;
   align-items: center;
@@ -428,8 +428,8 @@ body {
 .form-field input:focus {
   outline: none;
   border-color: var(--accent);
-  background: rgba(99, 102, 241, 0.06);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  background: rgba(239, 68, 68, 0.04);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .form-field input::placeholder {
@@ -468,19 +468,19 @@ body {
   font-family: inherit;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
   margin-top: 4px;
   letter-spacing: 0.01em;
 }
 
 .auth-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.45);
 }
 
 .auth-btn:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
 }
 
 .auth-btn:disabled {
@@ -523,9 +523,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.25);
 }

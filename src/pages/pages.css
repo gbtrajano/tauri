@@ -1,4 +1,4 @@
-/* src/pages/pages.css — Dark Mode */
+/* src/pages/pages.css — Light Mode */
 
 /* ===== PAGE CONTAINER ===== */
 .pagina-container {
@@ -32,7 +32,7 @@
 
 .form-cadastro input,
 .form-cadastro select {
-  background: rgba(255, 255, 255, 0.04);
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
@@ -48,7 +48,7 @@
 .form-cadastro select:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .form-cadastro input::placeholder {
@@ -74,12 +74,12 @@
   font-family: inherit;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .form-cadastro button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
 }
 
 .form-cadastro button:active {
@@ -98,7 +98,7 @@
 }
 
 .tabela-dados thead {
-  background: rgba(99, 102, 241, 0.06);
+  background: rgba(239, 68, 68, 0.05);
 }
 
 .tabela-dados th {
@@ -124,7 +124,7 @@
 }
 
 .tabela-dados tbody tr:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .tabela-dados tbody tr:last-child td {
@@ -179,7 +179,7 @@
 .search-bar input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .search-bar input::placeholder {
@@ -212,8 +212,8 @@
 
 .botao-config:hover {
   border-color: var(--border-accent);
-  background: rgba(99, 102, 241, 0.08);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+  background: rgba(239, 68, 68, 0.05);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.1);
   transform: translateY(-1px);
 }
 
@@ -311,7 +311,7 @@
   width: 100%;
   min-height: 150px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.04);
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
@@ -325,7 +325,7 @@
 .textarea-orcamento:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .orcamento-actions {
@@ -369,7 +369,7 @@
 .ordens-filtros input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .ordens-filtros select option {
@@ -409,7 +409,7 @@
 .form-group select,
 .form-group textarea {
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
@@ -424,7 +424,7 @@
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .form-group select option {
@@ -464,7 +464,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  background: var(--accent);
   transform: scaleX(0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: left;

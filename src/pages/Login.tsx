@@ -86,8 +86,8 @@ export function Login() {
         )}
 
         {successMsg && (
-          <div style={{ marginBottom: 14, color: '#6ee7b7', background: 'rgba(110,231,183,0.1)', padding: 12, borderRadius: 8, fontSize: 14 }}>
-            ✅ {successMsg}
+          <div style={{ marginBottom: 14, color: '#16a34a', background: 'rgba(22,163,74,0.1)', padding: 12, borderRadius: 8, fontSize: 14 }}>
+            {successMsg}
           </div>
         )}
 
