@@ -1,20 +1,20 @@
 // src/App.tsx
-import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Estoque from './pages/Estoque';
-import OrdensServico from './pages/OrdensServico';
-import Clientes from './pages/Clientes';
-import Veiculos from './pages/Veiculos';
-import Configuracoes from './pages/Configuracoes';
-import Servicos from './pages/Servicos';
-import Orcamento from './pages/Orcamento';
-import { Login } from './pages/Login';
-import { getDatabase } from './database';
-import { check, Update } from '@tauri-apps/plugin-updater';
-import { AuthProvider } from './context/AuthContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import './App.css';
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import Estoque from "./pages/Estoque";
+import OrdensServico from "./pages/OrdensServico";
+import Clientes from "./pages/Clientes";
+import Veiculos from "./pages/Veiculos";
+import Configuracoes from "./pages/Configuracoes";
+import Servicos from "./pages/Servicos";
+import Orcamento from "./pages/Orcamento";
+import { Login } from "./pages/Login";
+import { getDatabase } from "./database";
+import { check } from "@tauri-apps/plugin-updater";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import "./App.css";
 
 function App() {
   // Inicializa o banco de dados SQLite local
@@ -23,20 +23,24 @@ function App() {
   }, []);
 
   // Verificador de atualizações (executa 5s após inicialização)
+  // Verificador de atualizações (executa 5s após inicialização)
   useEffect(() => {
     const timer = setTimeout(async () => {
       try {
-        const manifest: Update | null = await check();
-        if (manifest !== null) {
+        // Na v2, o check() já traz o objeto direto se houver atualização
+        const update = await check();
+
+        if (update) {
           const resposta = window.confirm(
-            `🚀 Nova versão disponível: ${manifest.version}\n\n${manifest.body}\n\nDeseja atualizar agora?`
+            `🚀 Nova versão disponível!\n\nDeseja atualizar agora?`,
           );
           if (resposta) {
-            await manifest.downloadAndInstall();
+            // Baixa e instala
+            await update.downloadAndInstall();
           }
         }
-      } catch {
-        // Falha silenciosa — não irrita o usuário com erros de rede
+      } catch (error) {
+        console.error("Erro ao buscar atualização:", error);
       }
     }, 5000);
 
