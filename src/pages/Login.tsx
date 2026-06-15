@@ -52,7 +52,7 @@ export function Login() {
     } catch (err: any) {
       setError(
         err.message ||
-          "Credenciais inválidas ou erro no servidor. Tente novamente.",
+        "Credenciais inválidas ou erro no servidor. Tente novamente.",
       );
     } finally {
       setLoading(false);

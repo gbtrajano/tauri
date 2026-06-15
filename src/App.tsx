@@ -12,6 +12,7 @@ import Orcamento from "./pages/Orcamento";
 import { Login } from "./pages/Login";
 import { getDatabase } from "./database";
 import { check } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import "./App.css";
@@ -37,6 +38,8 @@ function App() {
           if (resposta) {
             // Baixa e instala
             await update.downloadAndInstall();
+            // Reinicia o app para aplicar a atualização
+            await relaunch();
           }
         }
       } catch (error) {

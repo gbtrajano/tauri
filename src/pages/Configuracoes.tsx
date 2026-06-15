@@ -1,10 +1,22 @@
 // src/pages/Configuracoes.tsx
 import { invoke } from '@tauri-apps/api/core';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './pages.css';
+
+interface AppInfo {
+  name: string;
+  version: string;
+}
 
 const Configuracoes = () => {
     const [mensagem, setMensagem] = useState('');
+    const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
+
+    useEffect(() => {
+        invoke<AppInfo>('app_info')
+            .then(setAppInfo)
+            .catch(console.error);
+    }, []);
 
     const exportar = async () => {
         try {
@@ -36,6 +48,14 @@ const Configuracoes = () => {
                     Importar banco de dados
                 </button>
             </div>
+
+            {appInfo && (
+                <div className="sobre-sistema">
+                    <h2>Sobre o Sistema</h2>
+                    <p><strong>Nome:</strong> {appInfo.name}</p>
+                    <p><strong>Versão:</strong> {appInfo.version}</p>
+                </div>
+            )}
 
             {mensagem && (
                 <div className="mensagem-feedback">

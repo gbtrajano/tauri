@@ -5,7 +5,15 @@ use tauri::Manager;
 use tauri_plugin_dialog::DialogExt;
 use tokio::sync::oneshot;
 
+#[derive(serde::Serialize)]
+#[allow(dead_code)]
+pub struct AppInfo {
+    name: String,
+    version: String,
+}
+
 #[tauri::command]
+#[allow(dead_code)]
 pub async fn export_database(app: AppHandle) -> Result<String, String> {
     let db_path = app
         .path()
@@ -36,6 +44,7 @@ pub async fn export_database(app: AppHandle) -> Result<String, String> {
 }
 
 #[tauri::command]
+#[allow(dead_code)]
 pub async fn import_database(app: AppHandle) -> Result<(), String> {
     let (tx, rx) = oneshot::channel();
 
@@ -63,4 +72,13 @@ pub async fn import_database(app: AppHandle) -> Result<(), String> {
     fs::copy(&src_path, &db_path).map_err(|e| e.to_string())?;
 
     app.restart();
+}
+
+#[tauri::command]
+#[allow(dead_code)]
+pub fn app_info() -> Result<AppInfo, String> {
+    Ok(AppInfo {
+        name: env!("CARGO_PKG_NAME").to_string(),
+        version: env!("CARGO_PKG_VERSION").to_string(),
+    })
 }

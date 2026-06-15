@@ -2,9 +2,16 @@
 // Agora funciona como layout completo com sidebar (padrão correto do React Router v6)
 import { Navigate, Outlet, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useState, useEffect } from 'react';
+import { getVersion } from '@tauri-apps/api/app';
 
 export function ProtectedRoute() {
   const { user, loading, logout } = useAuth()
+  const [appVersion, setAppVersion] = useState<string>('');
+
+  useEffect(() => {
+    getVersion().then(setAppVersion).catch(console.error);
+  }, []);
 
   // Mostra spinner enquanto verifica sessão
   if (loading) {
@@ -59,7 +66,7 @@ export function ProtectedRoute() {
             <span className="nav-icon">🚗</span>Veículos
           </NavLink>
           <NavLink to="/configuracoes" id="nav-configuracoes">
-            <span className="nav-icon">⚙️</span>Configurações
+            <span className="nav-icon">⚙️</span>Configurações <span style={{ fontSize: '0.8em', color: 'var(--text-muted)', marginLeft: 'auto' }}>{appVersion ? `v${appVersion}` : ''}</span>
           </NavLink>
         </nav>
 

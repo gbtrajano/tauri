@@ -28,11 +28,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
+  // Função auxiliar para verificar se a conta foi revogada
+  const checkRevokedStatus = async (email: string) => {
+    try {
+      const { data } = await supabase
+        .from('activation_keys')
+        .select('is_revoked')
+        .eq('user_email', email)
+        .single()
+      
+      return data?.is_revoked === true
+    } catch {
+      return false
+    }
+  }
+
   useEffect(() => {
     // Busca sessão inicial — com fallback em caso de erro de rede
     supabase.auth.getSession()
-      .then(({ data: { session } }) => {
-        setUser(session?.user ?? null)
+      .then(async ({ data: { session } }) => {
+        if (session?.user?.email) {
+          const isRevoked = await checkRevokedStatus(session.user.email)
+          if (isRevoked) {
+            await supabase.auth.signOut()
+            setUser(null)
+          } else {
+            setUser(session.user)
+          }
+        } else {
+          setUser(null)
+        }
       })
       .catch(() => {
         setUser(null)
@@ -43,8 +68,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // Escuta mudanças de auth (login, logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null)
+      async (_event, session) => {
+        if (session?.user?.email) {
+          const isRevoked = await checkRevokedStatus(session.user.email)
+          if (isRevoked) {
+            await supabase.auth.signOut()
+            setUser(null)
+          } else {
+            setUser(session.user)
+          }
+        } else {
+          setUser(null)
+        }
         setLoading(false)
       }
     )
@@ -57,6 +92,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+
+    // Verifica se a chave foi revogada logo após o login
+    const isRevoked = await checkRevokedStatus(email)
+    if (isRevoked) {
+      await supabase.auth.signOut()
+      throw new Error('Acesso negado: Sua licença foi cancelada ou reembolsada.')
+    }
   }
 
   const signUp = async (email: string, password: string, activationKey: string) => {
