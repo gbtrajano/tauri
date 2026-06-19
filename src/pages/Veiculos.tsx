@@ -10,6 +10,8 @@ interface Veiculo {
     modelo: string;
     ano: number;
     cor: string;
+    chassi: string;
+    quilometragem: number;
     cliente_id: number;
 }
 
@@ -26,6 +28,8 @@ const Veiculos = () => {
     const [modelo, setModelo] = useState('');
     const [ano, setAno] = useState('');
     const [cor, setCor] = useState('');
+    const [chassi, setChassi] = useState('');
+    const [quilometragem, setQuilometragem] = useState('');
     const [clienteId, setClienteId] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -49,14 +53,16 @@ const Veiculos = () => {
         }
         const db = await getDatabase();
         await db.execute(
-            'INSERT INTO veiculos (placa, marca, modelo, ano, cor, cliente_id) VALUES (?, ?, ?, ?, ?, ?)',
-            [placa, marca, modelo, parseInt(ano) || 0, cor, parseInt(clienteId)]
+            'INSERT INTO veiculos (placa, marca, modelo, ano, cor, chassi, quilometragem, cliente_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [placa, marca, modelo, parseInt(ano) || 0, cor, chassi, parseInt(quilometragem) || 0, parseInt(clienteId)]
         );
         setPlaca('');
         setMarca('');
         setModelo('');
         setAno('');
         setCor('');
+        setChassi('');
+        setQuilometragem('');
         setClienteId('');
         carregarVeiculos();
     };
@@ -81,7 +87,8 @@ const Veiculos = () => {
             v.marca.toLowerCase().includes(term) ||
             v.modelo.toLowerCase().includes(term) ||
             v.ano.toString().includes(term) ||
-            v.cor.toLowerCase().includes(term)
+            v.cor.toLowerCase().includes(term) ||
+            (v.chassi && v.chassi.toLowerCase().includes(term))
         );
     });
 
@@ -95,6 +102,8 @@ const Veiculos = () => {
                 <input placeholder="Modelo" value={modelo} onChange={e => setModelo(e.target.value)} />
                 <input placeholder="Ano" type="number" value={ano} onChange={e => setAno(e.target.value)} />
                 <input placeholder="Cor" value={cor} onChange={e => setCor(e.target.value)} />
+                <input placeholder="Chassi" value={chassi} onChange={e => setChassi(e.target.value)} />
+                <input placeholder="Quilometragem" type="number" value={quilometragem} onChange={e => setQuilometragem(e.target.value)} />
                 <select value={clienteId} onChange={e => setClienteId(e.target.value)}>
                     <option value="">-- Selecione um Cliente --</option>
                     {clientes.map(c => (
@@ -109,7 +118,7 @@ const Veiculos = () => {
             <div className="search-bar">
                 <input
                     type="text"
-                    placeholder="Pesquisar veículos (placa, marca, modelo, ano, cor)..."
+                    placeholder="Pesquisar veículos (placa, marca, modelo, chassi)..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                 />
@@ -127,6 +136,8 @@ const Veiculos = () => {
                             <th>Modelo</th>
                             <th>Ano</th>
                             <th>Cor</th>
+                            <th>Chassi</th>
+                            <th>KM</th>
                             <th>Cliente</th>
                             <th>Ação</th>
                         </tr>
@@ -143,6 +154,8 @@ const Veiculos = () => {
                                     <td>{v.modelo}</td>
                                     <td>{v.ano}</td>
                                     <td>{v.cor}</td>
+                                    <td>{v.chassi || '-'}</td>
+                                    <td>{v.quilometragem || 0}</td>
                                     <td>{clienteNome}</td>
                                     <td>
                                         <button className="botao-excluir" onClick={() => excluir(v.id)}>Excluir</button>

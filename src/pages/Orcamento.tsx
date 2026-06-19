@@ -23,9 +23,8 @@ const Orcamento = () => {
     const [pecas, setPecas] = useState<PecaEstoque[]>([]);
     const [servicos, setServicos] = useState<Servico[]>([]);
     const [selectedPecas, setSelectedPecas] = useState<number[]>([]);
-    const [selectedServicoId, setSelectedServicoId] = useState<number | null>(null);
+    const [selectedServicos, setSelectedServicos] = useState<number[]>([]);
     const [mensagem, setMensagem] = useState('');
-    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         carregarDados();
@@ -49,47 +48,49 @@ const Orcamento = () => {
         );
     };
 
-    const selecionarServico = (id: number | null) => {
-        setSelectedServicoId(id);
+    const toggleServico = (id: number) => {
+        setSelectedServicos(prev =>
+            prev.includes(id)
+                ? prev.filter(i => i !== id)
+                : [...prev, id]
+        );
     };
 
-    const calcularTotal = () => {
+    const calcularEGerar = (currentPecas: number[], currentServicos: number[]) => {
         let soma = 0;
         pecas.forEach(p => {
-            if (selectedPecas.includes(p.id)) {
+            if (currentPecas.includes(p.id)) {
                 soma += p.preco_venda;
             }
         });
-        const servico = servicos.find(s => s.id === selectedServicoId);
-        if (servico) {
-            soma += servico.preco;
-        }
-        setTotal(soma);
-    };
+        servicos.forEach(s => {
+            if (currentServicos.includes(s.id)) {
+                soma += s.preco;
+            }
+        });
 
-    const gerarMensagem = () => {
         let msg = 'Orçamento:\n';
         pecas.forEach(p => {
-            if (selectedPecas.includes(p.id)) {
+            if (currentPecas.includes(p.id)) {
                 msg += `- ${p.descricao}: R$ ${p.preco_venda.toFixed(2).replace('.', ',')}\n`;
             }
         });
-        const servico = servicos.find(s => s.id === selectedServicoId);
-        if (servico) {
-            msg += `- Serviço: ${servico.nome}`;
-            if (servico.descricao) {
-                msg += ` (${servico.descricao})`;
+        servicos.forEach(s => {
+            if (currentServicos.includes(s.id)) {
+                msg += `- Serviço: ${s.nome}`;
+                if (s.descricao) {
+                    msg += ` (${s.descricao})`;
+                }
+                msg += `: R$ ${s.preco.toFixed(2).replace('.', ',')}\n`;
             }
-            msg += `: R$ ${servico.preco.toFixed(2).replace('.', ',')}\n`;
-        }
-        msg += `\nTotal: R$ ${total.toFixed(2).replace('.', ',')}`;
+        });
+        msg += `\nTotal: R$ ${soma.toFixed(2).replace('.', ',')}`;
         setMensagem(msg);
     };
 
     useEffect(() => {
-        calcularTotal();
-        gerarMensagem();
-    }, [selectedPecas, selectedServicoId, pecas, servicos]);
+        calcularEGerar(selectedPecas, selectedServicos);
+    }, [selectedPecas, selectedServicos, pecas, servicos]);
 
     const copiarParaAreaDeTransferencia = async () => {
         try {
@@ -141,10 +142,9 @@ const Orcamento = () => {
                                 <li key={s.id} className="item-selecao">
                                     <label>
                                         <input
-                                            type="radio"
-                                            name="servico"
-                                            checked={selectedServicoId === s.id}
-                                            onChange={() => selecionarServico(s.id)}
+                                            type="checkbox"
+                                            checked={selectedServicos.includes(s.id)}
+                                            onChange={() => toggleServico(s.id)}
                                         />
                                         <span>
                                             {s.nome}

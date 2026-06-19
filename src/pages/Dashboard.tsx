@@ -38,7 +38,7 @@ const Dashboard = () => {
           db.select<{ count: number }[]>('SELECT COUNT(*) as count FROM veiculos'),
           db.select<{ count: number }[]>('SELECT COUNT(*) as count FROM servicos'),
           db.select<{ count: number }[]>('SELECT COUNT(*) as count FROM ordens_servico WHERE status = ?', ['aberta']),
-          db.select<{ count: number }[]>('SELECT COUNT(*) as count FROM pecas_estoque WHERE quantidade < 5'),
+          db.select<{ count: number }[]>('SELECT COUNT(*) as count FROM pecas_estoque WHERE quantidade <= estoque_minimo'),
           db.select<{ total: number }[]>('SELECT COALESCE(SUM(quantidade * preco_venda), 0) as total FROM pecas_estoque'),
         ]);
 
@@ -84,7 +84,7 @@ const Dashboard = () => {
           <div className="valor">{stats.ordensAbertas}</div>
         </div>
         <div className="card">
-          <h2>⚠️ Estoque Baixo (&lt; 5)</h2>
+          <h2>⚠️ Estoque Baixo</h2>
           <div className="valor">{stats.estoqueBaixo}</div>
         </div>
         <div className="card">
